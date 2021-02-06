@@ -1,0 +1,206 @@
+---------------------------------------------
+1. Turning Strings to URLS
+---------------------------------------------
+input: "Jasmine Ann Jones"
+output: "Jasmine%20Ann%20Jones"
+
+//WITHOUT Recursion
+function makeUrl(str){
+  let arr = str.split(" ");
+  let result = [];
+  for (let i=0; i<arr.length;i++){
+  	if(i<arr.length-1){
+      const space = "%20";
+      result.push(arr[i]+space);
+     }
+     else {
+     	result.push(arr[i]);
+     }
+  }
+  return result.join("");
+}
+
+//WITH Recursion
+const makeUrl = (str) => {
+  //termination case
+ 	if(str === null){
+  	return str;
+  } 
+  strArr = str.split(" ");
+  //base case
+  if (str === ""){
+    return "";
+  } else {
+  	if(strArr.length <= 1){
+    	const newArr = strArr.shift();
+      const newStr = strArr.join(" ");
+      return newArr + makeUrl(newStr);
+    } else {
+      const newArr = strArr.shift();
+      const newStr = strArr.join(" ");
+      return newArr + "%20" + makeUrl(newStr);
+    }
+  }
+}
+----------------------------------------------------
+2. Array Deduping
+____________________________________________________
+
+input = [7, 9, "hi", 12, "hi", 7, 53]
+output = [7, 9, "hi", 12, 53]
+
+//WITHOUT: rescurion & filter()
+
+function dedup(arr){
+  let result = [];
+  for (let i = 0; i < arr.length; i++){
+    if (!result.includes(arr[i])){
+      result.push(arr[i])
+    }
+  }
+  return result;
+}
+
+//WITHOUT: Recursion WITH: filter();
+
+function dedup(arr){
+	let result = arr.filter(function(el, index) {
+    return arr.indexOf(el) === index;
+  })
+  return result
+};
+//indexOf : returns the first index where the element can be found.
+
+//WITH: Recursion
+const dedup = (arr, resultArr=[]) => {
+  if(typeof(arr) != 'object'){
+  return arr;
+  }
+  let result = resultArr;
+  if(arr.length <= 0){
+    return result;
+  }
+  else{
+    //compare array elements
+    if(!result.includes(arr[0])){
+      result.push(arr[0]);
+      const newArr= arr.slice(1);
+      return dedup(newArr, result);
+    } else {
+      const newArr= arr.slice(1);
+      return dedup(newArr, result);
+    }
+  }
+}
+----------------------------------------------------
+3. Compressing Strings
+____________________________________________________
+input = "aaabccdddda"
+output = "3ab2c4da"
+
+//WITHOUT Recursion
+function compress(str){
+  let arr = str.split("");
+
+  let result = "";
+  let counter = 1;
+
+  for (i=0; i<arr.length; i++){
+    if(arr[i] == arr[i+1]){
+      counter ++;
+    } else {
+      if(counter > 1){
+        result += counter + arr[i];
+        counter = 1;
+      } else {
+        result += arr[i];
+        counter = 1;
+      }
+    }
+  }
+  return result;
+}
+
+//WITH Recursion
+
+const compress = (str, counter = 1) => {
+
+  strArr = str.split("");
+
+  if(str === ""){
+    return "";
+
+  } else {
+    if(strArr[0] == strArr[1]){
+        const newArr = strArr.slice(1);
+        console.log(newArr)
+        counter ++
+        return compress(newArr.join(""), counter);
+    } else {
+      if(counter > 1) {
+        const newArr = strArr.slice(1);
+        return counter + strArr[0] + compress(newArr.join(""), counter = 1);
+      } else {
+        const newArr = strArr.slice(1);
+        return strArr[0] + compress(newArr.join(""), counter = 1);
+      }
+    }
+  }
+}
+
+
+
+----------------------------------------------------
+4. Checking for Uniqueness
+____________________________________________________
+
+input = "hello"         input = "copyright"
+output = false          output = true
+
+WITHOUT Array
+
+function uniqueChar(str) {
+  for(let i=0; i<=str.length; i++) {
+    for (let j=i+1; j<=str.length; j++){
+      if(str[j] == str[i]){
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+
+----------------------------------------------------
+5. Array Sorting
+____________________________________________________
+input = [9, 2, 7, 12]
+output = [2, 7, 9, 12]
+
+//Merge Sorting
+
+function merge(left, right){
+  let sortedArr = []
+
+  while (left.length && right.length) {
+    if(left[0] < right[0]){
+      sortedArr.push(left.shift())
+    } else {
+      sortedArr.push(right.shift())
+    }
+  }
+  return [ ...sortedArr, ...left, ...right]; //use spread operator to concatanate
+}
+
+function mergeSort(arr) {
+  if(arr.length <= 1){
+    return arr;
+  }
+
+  const half = Math.floor(arr.length / 2);
+
+  const left = arr.slice(0, half);
+  const right = arr.slice(half);
+  return merge(mergeSort(left), mergeSort(right));
+} 
+-----------------------------------------------------
